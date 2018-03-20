@@ -4,12 +4,21 @@ import (
 	"errors"
 )
 
+type Iterator interface {
+	Key() []byte
+	Value() []byte
+	Next() bool
+	Error() error
+	Release()
+}
+
 type KVStore interface {
 	Open(json_config string) error
 	Close() error	
 	Put(key []byte, value []byte) error
 	Get(key []byte) (error, []byte)	
 	Delete(key []byte) error
+	Scan(first_key []byte, last_key []byte) Iterator
 }
 
 var (
@@ -18,9 +27,9 @@ var (
 )
 
 const (
-	StorageEngineLeveldb = 0
-	StorageEngineBOS = 1
-	StorageEngineMola = 3
+	StorageEngineLeveldb = iota
+	StorageEngineBOS 
+	StorageEngineMola
 )
 
 func NewStorage(engine int) KVStore {

@@ -40,7 +40,14 @@ func TestLeveldb(t *testing.T) {
 			}
 		}
 	}	
-			
+	scan_result := kv_store.Scan(nil, nil)
+	for scan_result.Next() {
+		t.Log(string(scan_result.Key()), string(scan_result.Value()))
+	}
+	scan_result.Release()
+	if (scan_result.Error() != nil) {
+		t.Error(scan_result.Error())
+	}
 }
 
 func TestOpenFail(t *testing.T) {
